@@ -20,14 +20,15 @@ export const withIndexStyle = withStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
   },
-  playButton: {
+  button: {
     '&:hover': {
       color: deepOrange[300],
     }
   },
-  playIcon: {
+  icon: {
     height: theme.spacing.unit * 4,
     width: theme.spacing.unit * 4,
     fontSize: theme.spacing.unit * 4,
@@ -36,6 +37,7 @@ export const withIndexStyle = withStyles(theme => ({
     display: 'contents',
   },
   slider: {
+    paddingRight: theme.spacing.unit * 2,
     width: '0%',
     transition: 'width 500ms, opacity 100ms 520ms',
     opacity: 0,

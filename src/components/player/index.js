@@ -20,41 +20,48 @@ const songInfo = {
   cover: 'https://scontent.fssa8-1.fna.fbcdn.net/v/t1.0-9/21766499_10214276467216428_6330074394834461592_n.jpg?_nc_cat=111&oh=635cbf8fa83387fa30edb20a13113347&oe=5C59D919',
   player: 'joão nery', 
 }
+//https://codepen.io/nfj525/pen/rVBaab
+//https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
 
 export class Player extends React.Component {
   constructor(props) {
     super(props);
     autoBind(this);
-    this.state = { isPlaying: false, isVolumeOpen: false, volume: 50 };
+    this.state = { 
+      isPlaying: false, 
+      isVolumeOpen: false, 
+      currentVolume: 50, 
+      mute: false, 
+    };
   }
 
   playToggle() {
-    this.setState({ isPlaying: !this.state.isPlaying }, () => {
-      console.log(this.state.isPlaying);
+    this.setState({ isPlaying: !this.state.isPlaying });
+  }
+
+  muteToggle() {
+    this.setState({ mute: !this.state.mute }, () => {
+      this.setState({ 
+        currentVolume: this.state.currentVolume ? 0 : this.state.lastVolume  
+      });
     });
   }
 
-  handleVolumeChange(event, volume) {
-    this.setState({ volume }, () => {
-      console.log(volume)
-    });
+  handleVolumeChange(event, currentVolume) {
+    this.setState({ currentVolume, lastVolume: currentVolume, mute: !currentVolume });
   }
 
   handleVolumeClose() {
-    this.setState({ isVolumeOpen: false }, () => {
-      console.log(this.state.isVolumeOpen);
-    });
+    this.setState({ isVolumeOpen: false });
   }
 
   handleVolumeOpen() {
-    this.setState({ isVolumeOpen: true }, () => {
-      console.log(this.state.isVolumeOpen);
-    });
+    this.setState({ isVolumeOpen: true });
   }
   
   render() {
     const { classes } = this.props;
-    const { isPlaying, isVolumeOpen, volume } = this.state;
+    const { isPlaying, isVolumeOpen, currentVolume, mute } = this.state;
     const { title, artist, cover, player } = songInfo;
     const sliderClass = classNames(classes.slider, isVolumeOpen && classes.sliderOpen);
 
@@ -73,9 +80,9 @@ export class Player extends React.Component {
             <IconButton 
               aria-label="Play/pause"
               onClick={this.playToggle} 
-              className={classes.playButton}
+              className={classes.button}
             >
-              <Icon className={classes.playIcon}>{isPlaying ? 'pause' : 'play_arrow'}</Icon>
+              <Icon className={classes.icon}>{isPlaying ? 'pause' : 'play_arrow'}</Icon>
             </IconButton>
             <div
               className={classes.radioController} 
@@ -84,12 +91,14 @@ export class Player extends React.Component {
             >
               <IconButton 
                 aria-label="volume"
-                className={classes.playButton}
+                className={classes.button}
+                onClick={this.muteToggle}
               >
-                <Icon className={classes.playIcon}>volume_up</Icon>
+                <Icon className={classes.icon}>{mute ? 'volume_off' : 'volume_up'}</Icon>
               </IconButton>
               <Slider
-                value={volume}
+                disabled={mute}
+                value={currentVolume}
                 aria-labelledby="label"
                 className={sliderClass}
                 onChange={this.handleVolumeChange}
@@ -97,11 +106,13 @@ export class Player extends React.Component {
             </div>
           </div>
         </div>
-        <CardMedia
-          className={classes.cover}
-          image={cover}
-          title={player}
-        />
+        {cover && (
+          <CardMedia
+            className={classes.cover}
+            image={cover}
+            title={player}
+          />
+        )}
       </Card>
     );
   }
@@ -109,6 +120,10 @@ export class Player extends React.Component {
 
 Player.propTypes = {
     classes: PropTypes.object.isRequired,
+    title: PropTypes.string,
+    artist: PropTypes.string,
+    cover: PropTypes.string,
+    player: PropTypes.string,
 };
   
 export default withIndexStyle(Player);
