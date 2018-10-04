@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autoBind from 'react-autobind';
 import classNames from 'classnames';
+import AudioVisualizer from '../audio-visualizer';
 import { 
   Card, 
   CardContent, 
@@ -76,6 +77,9 @@ export class Player extends React.Component {
               {artist}
             </Typography>
           </CardContent>
+
+          <AudioVisualizer />
+
           <div className={classes.controls}>
             <IconButton 
               aria-label="Play/pause"
