@@ -8,20 +8,28 @@ export class AudioVisualizer extends React.Component {
   constructor(props) {
     super(props);
     autoBind(this);
+    this.analyser = new (window.AudioContext || window.webkitAudioContext)().createAnalyser();
+    this.analyser.fftSize = 2048;
+    const bufferLength = this.analyser.frequencyBinCount;
+    this.dataArray = new Uint8Array(bufferLength);
   }
 
   componentDidMount() {
-    //const aa = 'a';
-    //this.analyser =  new (window.AudioContext || window.webkitAudioContext)().createAnalyser();;
-    //analyser.fftSize = 2048;
-    //const bufferLength = analyser.frequencyBinCount;
-    //this.dataArray = new Uint8Array(bufferLength);
+  }
+
+  renderWaves() {
+    const drawVisual = requestAnimationFrame(this.renderWaves);
+    this.analyser.getByteTimeDomainData(this.dataArray);
+    //Write draw function here
+    console.log(this.dataArray);
+    //console.log(drawVisual);
   }
 
   render() {
+    this.renderWaves();
     return(
       <div>
-          TESTE
+        WAVES
       </div>
     );
   }
